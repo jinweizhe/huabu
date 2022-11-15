@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- <a href="xj.png" download="a.png">百度</a> -->
+    <canvas id="huabu" width="400px" height="200px" style="border:1px solid #000000;"></canvas>
+    <div>
+        <input type="text" id="srk" placeholder="请输入图片名称">
+        <button id="baocun">保存为图片</button>
+        <button id="qingchu" onclick="clearCanvas()">清除画布</button>
+    </div>
+
+    <script>
+        //获取画布
+        let canvas = document.getElementById("huabu")
+        console.log(canvas.getBoundingClientRect());
+        let canvasStyle = canvas.getBoundingClientRect()
+        let ctx = canvas.getContext("2d")
+        let isDrawing = false
+        let l = canvas.offsetLeft
+        let h = canvas.offsetTop
+        canvas.addEventListener('mousedown', function (e) {
+            isDrawing = true
+            // ctx.moveTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+            ctx.moveTo(e.pageX - canvasStyle.x, e.pageY - canvasStyle.y);
+        })
+        canvas.addEventListener('mousemove', function (e) {
+            if (isDrawing) {
+                //ctx.lineTo(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+                ctx.lineTo(e.pageX - canvasStyle.x, e.pageY - canvasStyle.y);
+                ctx.strokeStyle = 'red';
+                // ctx.lineWidth='20';
+                ctx.stroke();
+            }
+        })
+        document.addEventListener('mouseup', function (e) {
+            isDrawing = false
+        })
+
+
+        //获取input的值
+        let name = ""
+        let input = document.getElementById("srk")
+        input.addEventListener("change", function (e) {
+            name = this.value
+        })
+
+
+        //保存为图片
+        let baocun = document.getElementById("baocun")
+        baocun.addEventListener("click", function (e) {
+            canvas.toBlob(function (blob) {
+                console.log(blob);
+                let a = document.createElement("a")
+                document.querySelector("body").appendChild(a)
+                a.download = name + ".png"
+                a.href = URL.createObjectURL(blob)
+                console.log(URL.createObjectURL(blob));
+                a.click()
+                a.remove()
+            })
+        })
+
+        //清除画布
+        let qingchu = document.getElementById("qingchu")
+        qingchu.addEventListener("click", function () {
+            canvas.width = canvas.width
+            canvas.height = canvas.height
+        })
+    </script>
+</body>
+
+</html>
